@@ -1,6 +1,6 @@
 This script monitors multiple Aerospike metrics, represented as a single Nagios service
 (not to be confused with [aerospike_nagios.py](https://github.com/aerospike/aerospike-nagios),
-which monitors only one metric per Nagios service.
+which monitors only one metric per Nagios service).
 
 # Requirements
 
