@@ -39,12 +39,15 @@ class AerospikeChecker(object):
     def load_asinfo(self, cmd):
         res = self.system("asinfo -v '%s'" % cmd)
         if "=" in res:
-            ret = {}
-            for pair in res.split(";"):
-                k, v = pair.split("=")
-                if v.isdigit():
-                    v = int(v)
-                ret[k] = v
+            try:
+                ret = {}
+                for pair in res.split(";"):
+                    k, v = pair.split("=")
+                    if v.isdigit():
+                        v = int(v)
+                    ret[k] = v
+            except Exception:
+                raise AsinfoException(error_text=res)
         elif ";" in res:
             ret = res.split(";")
         else:
@@ -178,7 +181,7 @@ def main():
         checker = AerospikeChecker(args)
         exit_code, text = checker.run_checks()
     except AsinfoException as e:
-        exit_code, text = 2, "CRITICAL: asinfo error, text returned - \"%s\"" % e.error_text
+        exit_code, text = 2, "CRITICAL: asinfo error, text returned - \"%s\"" % e.error_text.replace("\n", " | ")
     except Exception as e:
         exit_code, text = 2, str(e)
     print(text)
